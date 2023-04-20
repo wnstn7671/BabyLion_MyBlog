@@ -1,0 +1,18 @@
+server :
+  port: 8083
+
+
+spring:
+
+  config:
+    activate:
+      on-profile: local
+
+
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/baby_lion_blog?characterEncoding=UTF-8
+    username: happy
+    password: day
+
