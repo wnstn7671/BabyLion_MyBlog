@@ -23,6 +23,7 @@ public class Post {
 
     // 내용
     @Setter
+
     @Column(columnDefinition = "TEXT")
     private String body;
 
@@ -30,19 +31,14 @@ public class Post {
     // 누가 썼는지
 
     // 언제 썼는지
-    private LocalDateTime createdAt;
-    // 언제 수정되었는지
-    private LocalDateTime updatedAt;
-
-    public static Post createPost(String title, String body, LocalDateTime createdAt, LocalDateTime updatedAt ) {
+    private LocalDateTime createdAt = LocalDateTime.now();    // 언제 수정되었는지
+    private LocalDateTime updatedAt = LocalDateTime.now();
+    public static Post createPost(String title, String body) {
 
         Post post = new Post();
 
         post.title = title;
         post.body = body;
-
-        post.createdAt = createdAt;
-        post.updatedAt = updatedAt;
 
         return post;
 

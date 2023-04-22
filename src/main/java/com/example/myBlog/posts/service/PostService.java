@@ -5,10 +5,13 @@ import com.example.myBlog.posts.repository.PostRepository;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,6 +32,20 @@ public class PostService {
     // 포스트 삭제
     //////////////
 
+
+    //포스트 검색
+    public List<Post> findAllByTitle(String title, Pageable pageable) {
+        List<Post> postList = postRepository.findAllByTitleContaining(title, pageable);
+        return postList;
+
+    }
+
+
+    // 포스트 목록
+        public List<Post> findAll(){
+        List<Post> postList = postRepository.findAll();
+        return postList;
+    }
 
     // 포스트 삭제
     @Transactional
@@ -75,11 +92,14 @@ public class PostService {
     }
 
     @Transactional
-    public Long save(String title, String body, LocalDateTime createdAt, LocalDateTime updatedAt){
-        return postRepository.save(Post.createPost(title,body,createdAt, updatedAt)).getId();
+    public Long save(String title, String body) {
+        Post post = Post.createPost(title, body);
+
+        Post save = postRepository.save(post);
+
+        return save.getId();
+
     }
-
-
 
 
 }
