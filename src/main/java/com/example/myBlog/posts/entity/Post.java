@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 @Getter
 @Entity
@@ -19,7 +20,6 @@ public class Post {
     // 제목
     @Setter
     private String title;
-
 
     // 내용
     @Setter
