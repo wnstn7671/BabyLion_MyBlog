@@ -1,38 +1,53 @@
 package com.example.myBlog.posts.controller;
 
+import com.example.myBlog.posts.dto.PostWriteDto;
+import com.example.myBlog.posts.dto.PostWriteRequest;
 import com.example.myBlog.posts.entity.Post;
 import com.example.myBlog.posts.service.PostService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
+@RequestMapping("/posts")
 @RequiredArgsConstructor
 public class PostController {
 
     private final PostService postService;
 
-    @GetMapping("/posts/write")
+    @GetMapping("/list")
+    @ResponseBody
+    public List<Post> getPostList() {
+        List<Post> postList = postService.findAll();
+        return postList;
+    }
+
+    @GetMapping("/write")
     public String getPostWriteView() {
         return "/posts/post_write";
     }
+
     @ResponseBody
-    @PostMapping("/posts/write")
-    public String postWrite(
-            @NotBlank String title, String body
+    @PostMapping("/write")
+    public PostWriteDto postWrite(
+            @RequestBody @Valid PostWriteRequest postWriteRequest
     ) {
-       // Long savedId = postService.save(title, body);
-        System.out.println("title = " + title);
-        System.out.println("body = " + body);
-        return "redirect:/";
+
+        System.out.println("postWriteRequest.getTitle() = " + postWriteRequest.getTitle());
+
+        Long savedId = postService.save(postWriteRequest.getTitle(), postWriteRequest.getBody());
+        PostWriteDto postWriteDto = new PostWriteDto(savedId);
+
+        return postWriteDto;
+
     }
 
-    @GetMapping("/posts/{id}")
+    @GetMapping("/{id}")
     public String getPost(
             @PathVariable Long id,
             Model model
@@ -42,6 +57,5 @@ public class PostController {
         model.addAttribute("post", findPost); // Map<String, Object>
         return "/posts/post_detail";
     }
-
 
 }

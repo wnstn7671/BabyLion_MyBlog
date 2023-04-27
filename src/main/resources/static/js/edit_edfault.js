@@ -23,25 +23,38 @@ function writePost(e) {
     console.log('HTML', htmlData);
     console.log('MarkDown', markdownData);
 
-    // @ToString X
+    // json
 
-    // SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+    // form
+    // const formData = new FormData();
+    // formData.append('title', postTitle );
+    // formData.append('body', htmlData);
 
-    let formData = new FormData();
-    formData.append('title', postTitle);
-    formData.append('body', htmlData);
+    const data = {
+        "title" : postTitle,
+        "body" : htmlData
+    };
+
 
     fetch("http://localhost:8083/posts/write", {
         method: "POST",
-        body : formData
+        headers: {
+            "Content-Type" : "application/json"
+        },
+        body : JSON.stringify(data)
     })
         .then(
-            (resp) => {
-                console.log('resp', resp);
-                if (resp.status == 200) {
-                    alert("작성 완료!");
-                    location.replace("/")
-                }
+            (resp) => resp.json()
+        )
+        .then(
+            (data) => {
+
+                console.log(data); // {postId:10}
+
+                alert("포스트 작성이 완료되었습니다.");
+                // location.replace("/posts/" + data.postId);
+                location.replace(`/posts/${data.postId}`);
+
             }
         )
         .catch(
